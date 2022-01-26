@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+
+
+<!-- 1 掃描service下的包   -->
+    <context:component-scan base-package="com.service"></context:component-scan>
+<!-- 2 將我們的所有業務 注入到spring 可以通過配置 或是 註解實現-->
+<!--  <import resource="classpath:spring-dao.xml"></import> IDEA配置 或是引入dao層文件  -->
+    <bean id="BookServiceImpl" class="com.service.BookServiceImpl">
+        <property name="bookMapper" ref="bookMapper"></property>
+    </bean>
+<!-- 3 聲明式事務配置 -->
+    <bean id="TransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+<!--   注入數據源     -->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+<!-- 4 aop事務支持   -->
+
+</beans>

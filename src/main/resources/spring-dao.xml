@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+<!-- 1 關聯資料庫配置文件   -->
+<context:property-placeholder location="classpath:database.properties"></context:property-placeholder>
+
+<!-- 2 連接池
+       dbcp 半自動化操作 不能自動連接
+       c3p0 自動化操作 自動化的載入配置文件 並且可以自動設置到對象中
+       druid
+       hikari
+-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"></property>
+        <property name="jdbcUrl" value="${jdbc.url}"></property>
+        <property name="user" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+
+        <!--   c3p0連接池的私有屬性   -->
+        <property name="maxPoolSize" value="30"></property>
+        <property name="minPoolSize" value="10"></property>
+        <!--   關閉連接後不自動commit     -->
+        <property name="autoCommitOnClose" value="false"></property>
+        <!--   獲取連接超時時間     -->
+        <property name="checkoutTimeout" value="10000"></property>
+        <!--   當獲取連接失敗重試次數     -->
+        <property name="acquireRetryAttempts" value="2"></property>
+
+    </bean>
+
+<!-- 3 SqlSessionFactory  -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+<!--   綁定Mybatis的配置文件     -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+     </bean>
+
+<!-- 4 配置dao介面掃描包 動態的實現Dao介面可以注入到Spring容器中  -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+<!--  注入 sqlSessionFactory      -->
+<!--  通過掃描value(String)       -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+<!--  要掃描的dao包  -->
+        <property name="basePackage" value="com.dao"></property>
+    </bean>
+
+
+</beans>
