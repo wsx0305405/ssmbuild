@@ -1,6 +1,6 @@
 ## 書籍管理系統
 
-整合了 MySQL Mybatis Spring SpringMVC 的練習項目
+整合了 MySQL Mybatis Spring SpringMVC 的練習專案
 
 
 
